@@ -1,3 +1,6 @@
 from django.test import TestCase
 
-# Create your tests here.
+import views
+
+print(views._todayYYYMMDD())
+print(views._todayWeekday())
