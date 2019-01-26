@@ -1,9 +1,24 @@
+# Imports
 from django.shortcuts import render
 
-# Create your views here.
+import datetime
 
+# Create your views here.
 def homepage(request):
     return render(request, 'home.html')
+
+
+# Variables
+now = datetime.datetime.now()
+
+
+
+# Accessors - General
+def _todayYYYMMDD():
+    return now.strftime("%Y-%m-%d")
+
+def _todayWeekday():
+    return now.strftime("%A")
 
 
 
@@ -25,3 +40,4 @@ def _patientPhone():
 
 def _patientHCN():
     return "9876 - 9987 - 233 - WP"
+    
