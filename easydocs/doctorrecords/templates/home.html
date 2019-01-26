@@ -4,6 +4,18 @@
 	<title>HOME PAGE</title>
 </head>
 <body>
-THIS IS THE HOME PAGE
+<h4>Select a Healthcare Provider</h4>
+
+<select name="klakjsdl">
+{% for hcp in hcpList %}
+	<option value="{{ hcp.id }}"> 123987 -- {{ hcp.first_name }} {{ hcp.last_name }} </option>
+{% endfor %}
+</select>
+
+<form action="#" method="get">
+	<input type="text" value="Enter HCP Name..." name="textbox_HCP"/>
+	<input type="submit" class="btn" value="Search" name="btn_searchHCP">
+</form>
+
 </body>
 </html>
