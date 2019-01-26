@@ -36,7 +36,7 @@ class Side_Effects(models.Model):
         verbose_name_plural = "Side_Effects"
 
 class Incompatible(models.Model):
-    medication = models.ForeignKey('Medication', on_delete = models.CASCADE)
+    medication = models.TextField(max_length = 1024*2)
     #medication_2 = models.ForeignKey('Medication', on_delete = models.CASCADE)
     
     class Meta:
@@ -81,8 +81,8 @@ class Patient(models.Model):
 class Appointment(models.Model):
     doctor = models.ForeignKey(HCP, on_delete = models.CASCADE)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
-    date = models.DateField(blank=True, null=True)
-    time = models.TimeField(blank=True, null=True)
+    date = models.DateField(blank = True, null = True)
+    time = models.TimeField(blank = True, null = True)
     
     def __str__(self):
         return self.doctor + " - " + self.patient + ": " + self.date + " - " + self.time
