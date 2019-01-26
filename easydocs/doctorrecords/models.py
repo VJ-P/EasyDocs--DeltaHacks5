@@ -21,10 +21,6 @@ class Medication(models.Model):
     class Meta:
         verbose_name_plural = "Medication"
 
-class Date(models.Model):
-    start_date = models.DateField()
-    end_date= models.DateField()
-
 class Side_Effects(models.Model):
     side_effect = models.CharField(max_length=30)
     medication = models.ForeignKey('Medication', on_delete = models.CASCADE)
@@ -43,7 +39,7 @@ class Incompatible(models.Model):
         verbose_name_plural = "Incompatible"
     
     def __str__(self):
-        return self.medication_1
+        return self.medication
     
 class Condition(models.Model):
     name = models.CharField(max_length=30)
