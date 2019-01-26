@@ -71,11 +71,21 @@ class Patient(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     condition = models.ForeignKey( 'Condition', on_delete = models.CASCADE)
-    date = models.DateField(blank=True,null=True)
-    time = models.TimeField(blank=True, null=True)
     
     def __str__(self):
         return self.first_name + " " + self.last_name
     
     class Meta:
         verbose_name_plural = "Patient"
+
+class Appointment(models.Model):
+    doctor = models.ForeignKey(HCP, on_delete = models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
+    date = models.DateField(blank=True, null=True)
+    time = models.TimeField(blank=True, null=True)
+    
+    def __str__(self):
+        return self.doctor + " - " + self.patient + ": " + self.date + " - " + self.time
+    
+    class Meta:
+        verbose_name_plural = "Appointment"
