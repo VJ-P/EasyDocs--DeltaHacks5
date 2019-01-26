@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 # Create your models here.
 class HCP(models.Model):
@@ -70,8 +71,8 @@ class Patient(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     condition = models.ForeignKey( 'Condition', on_delete = models.CASCADE)
-    date = models.DateField()
-    time = models.TimeField()
+    date = models.DateField(blank=True,null=True)
+    time = models.TimeField(blank=True, null=True)
     
     def __str__(self):
         return self.first_name + " " + self.last_name
