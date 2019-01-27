@@ -8,8 +8,12 @@ from . import models
 # Create your views here.
 def homepage(request):
     hcpList = models.HCP.objects.all()
-
     now = datetime.datetime.now()
+
+    if request.method == 'POST':
+        answer = request.POST['dds_HCP']
+    else:
+        answer = "none"
 
     if(request.GET.get('btn_searchHCP')):
         hcp = request.GET.get('textbox_HCP')
@@ -21,5 +25,6 @@ def homepage(request):
     {
         'todayYYYYMMDD':            now.strftime("%Y-%m-%d"),
         'todayWeekday':             now.strftime("%A"),
-        'hcpList':                  hcpList
+        'hcpList':                  hcpList,
+        'ans':                      answer
     })
