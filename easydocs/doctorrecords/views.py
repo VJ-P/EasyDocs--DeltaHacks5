@@ -102,19 +102,19 @@ def docCreate(appointment, time, filepath):
 
     p = PCF.add_paragraph('')
     p.add_run('Date of Appointment: \t\t').bold = True
-    p.add_run(appointment.date("%Y-%m-%d") + "\t\t")
+    p.add_run(appointment.date.strftime("%Y-%m-%d") + "\t\t")
     p.add_run('Date of Appointment: \t\t').bold = True
     p.add_run(time.strftime("%Y-%m-%d"))
     
     p = PCF.add_paragraph('')
     p.add_run('Time of Appointment: \t\t\t').bold = True
-    p.add_run(appointment.time("%H:%M:%S"))
+    p.add_run(appointment.time.strftime("%H:%M:%S"))
 
     PCF.add_heading('Patient Information', 1)
     PCF.add_paragraph('Name: \t\t' + str(patient.full_name()))
     PCF.add_paragraph('Gender: \t\t' + patient.sex)
 
-    PCF.add_paragraph('Date of Birth: \t' + patient.date_of_birth.strftime("%Y-%m-%d") + '\t\t\t Age:\t' + patient.get_patient_age())
+    PCF.add_paragraph('Date of Birth: \t' + patient.date_of_birth.strftime("%Y-%m-%d") + '\t\t\t Age:\t' + str(patient.get_patient_age()))
     PCF.add_paragraph('Address: \t\t' + str(patient.full_address()))
 
     PCF.add_paragraph('Phone: \t\t' + patient.phone_number)
@@ -247,11 +247,9 @@ def homepage(request):
 
             if date_start and date_end: 
                 appointment_list = db.Appointments.objects.filter(healthcare_provider=hcp_selected).filter(date__range=[date_start_str, date_end_str]).order_by('date')
-        
-    patient = db.Patient.objects.all()
-    inco = db.Incompatibilities.objects.all()
 
-    return render(request, 'home.html',
+
+    return render(request, 'home.html', {
         'HealthcareProviders':      hcpList,
         'SelectedHCP':              hcp_selected,
         'Appointments':             appointment_list,

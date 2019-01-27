@@ -1,9 +1,6 @@
 from django.db import models
 import datetime
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 class SideEffects(models.Model):
     effect = models.CharField(max_length = 100, blank=True, null=True)
 
@@ -111,24 +108,10 @@ class Patient(models.Model):
     def full_address(self):
         return  str(self.address) + ", " + str(self.city) + ", " + str(self.province) + ", " + str(self.country) + ", " + str(self.postal_code)
     
-<<<<<<< Updated upstream
-=======
-    #DOES NOT WORK. I WILL FIX IT.
-    """
-    def get_conflicting_meds(patient):
-      curr_treatments = patient.treatments
-      incompat_treatments = Incompatabilities.objects.all()
-      conflicting_med_lst = []
-      for treatment in curr_treatments:
-        for incompat in incompat_treatments:
-          if treatment in incompat:
-            conflicting_med_lst.add(treatment)
-      return conflicting_med_lst
-     """
->>>>>>> Stashed changes
+
     def get_patient_age(self):
         today = datetime.date.today()
-        dob = Patient.date_of_birth()
+        dob = self.date_of_birth
         
         return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
     
@@ -151,7 +134,7 @@ class Patient(models.Model):
         elif patient_age > 40 and self.sex[0] == "F":
             lst.append("AT RISK FOR BREAST CANCER")
             
-         else:
+        else:
             pass
 
         return lst
