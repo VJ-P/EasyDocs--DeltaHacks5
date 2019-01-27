@@ -91,24 +91,6 @@
 		});
 	</script>
 
-{% for patient in patients %}
-    {{patient.medication}}
-{% endfor %}
-<br>
-NORMAL TREATMENT
-{% for incom in incomp %}
-	<span>{{incom.treatment}}</span>
-{%endfor%}
-<br>
-INCOMPATIBLE TREATMENT:
-{% for incom in incomp %}
-	<span>{{incom.incompat_treatments}}</span>
-{% endfor %}
-<br>
-INCOMPAT CONDITIONS
-{% for incom in incomp %}
-	<span>{{incom.incompat_conditions}}</span>
-{%endfor%}
 </body>
 
 </html>
