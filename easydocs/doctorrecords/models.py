@@ -60,14 +60,36 @@ class System_Affected(models.Model):
     
     class Meta:
         verbose_name_plural = "Systems Affected"
-    
+        
 class Patient(models.Model):
+    
+    GENDER_CHOICES = (
+        ('M', "Male"),
+        ('F', 'Female')
+   )
+    
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
+    sex = models.CharField(choices=GENDER_CHOICES, max_length = 6, blank=True, null=True)
     condition = models.ForeignKey( 'Condition', on_delete = models.CASCADE)
+    phone_number = models.CharField(max_length=10, blank=True, null=True)
+    healthcard_number = models.CharField(max_length=12, blank=True, null=True)
+    addr_line_1 = models.CharField(max_length=100, blank=True, null=True)
+    addr_line_2 = models.CharField(max_length = 100, blank=True, null=True)
+    city = models.CharField(max_length = 100, blank=True, null=True)
+    province = models.CharField(max_length = 100, blank=True, null=True)
+    country = models.CharField(max_length = 100, blank=True, null=True)
+    postal_code = models.CharField(max_length = 6, blank=True, null=True)
+    date_of_birth = models.DateField(blank=True, null=True)
     
     def __str__(self):
         return self.first_name + " " + self.last_name
+    
+    def full_name(self):
+        return self.first_name + " " + self.last_name
+    
+    def full_address(self):
+        return self.addr_line_1 + ", " + self.addr_line_2 + ", " + self.city + ", " + self.province + ", " + self.country + ", " + self.postal_code
     
     class Meta:
         verbose_name_plural = "Patients"
