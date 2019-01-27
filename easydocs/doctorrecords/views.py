@@ -166,7 +166,7 @@ def homepage(request):
             for apt_id in appointment_gen_list:
                 if apt_id:
                     apt = db.Appointments.objects.filter(pk=apt_id)[0]
-                    docCreate(apt.patient, now, apt.patient.first_name)
+                    docCreate(apt, now, apt.patient.first_name)
 
         if (hcp_id != -1):
             hcp_selected = db.HealthcareProviders.objects.get(pk=hcp_id)
