@@ -3,7 +3,7 @@ from docx.shared import Inches
 from docx.shared import Pt
 import os
 
-def docCreate(firstName, lastName, gender, DOB, address, phone, HCN):
+def docCreate(patient, time):
     PCF = Document()
 
     #set styles
@@ -41,20 +41,20 @@ def docCreate(firstName, lastName, gender, DOB, address, phone, HCN):
 
     p1 = PCF.add_paragraph('')
     p1.add_run('Healthcare Practitioner: ').bold = True
-    p1.add_run("Dr. Melvin Hobbs")
+    p1.add_run("\t\tDr. Melvin Hobbs")
     p1.style = PCF.styles['Normal']
 
     p = PCF.add_paragraph('')
-    p.add_run('Date: ').bold = True
-    p.add_run("2019-01-26 15:20")
+    p.add_run('Date: \t\t' + time).bold = True
+    p.add_run(now)
 
     PCF.add_heading('Patient Information', 1)
-    PCF.add_paragraph('Name: \t\t' + firstName + " " + lastName)
-    PCF.add_paragraph('Gender: \t\t' + gender)
-    PCF.add_paragraph('Date of Birth: \t' + DOB)
-    PCF.add_paragraph('Address: \t\t' + address)
-    PCF.add_paragraph('Phone: \t\t' + phone)
-    PCF.add_paragraph('HCN: \t\t\t' + HCN)
+    PCF.add_paragraph('Name: \t\t' + patient.full_name)
+    PCF.add_paragraph('Gender: \t\t' + patient.sex)
+    PCF.add_paragraph('Date of Birth: \t' + patient.date_of_birth)
+    PCF.add_paragraph('Address: \t\t' + patient.full_address)
+    PCF.add_paragraph('Phone: \t\t' + patient.phone_number)
+    PCF.add_paragraph('HCN: \t\t\t' + patient.healthcard_number)
 
     PCF.add_heading('Family History', 1)
     ###run a loop depending on the number of diseases: example below for bullet points
@@ -99,5 +99,3 @@ def docCreate(firstName, lastName, gender, DOB, address, phone, HCN):
     filepath = os.path.join(r'C:\Users\108vi\Desktop', filename)
     #create the form
     PCF.save(filepath)
-
-docCreate('John', 'Doe', 'Male', '26/07/1997', '1280 Main Street West, Hamilton, Ontario', '(647) 647 6476', '2019-201-920-VP')
