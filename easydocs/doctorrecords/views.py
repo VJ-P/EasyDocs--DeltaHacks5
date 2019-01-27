@@ -185,3 +185,7 @@ def homepage(request):
         'StartDate':                date_start,
         'EndDate':                  date_end
     })
+
+
+#def download(request, filename):
+    
