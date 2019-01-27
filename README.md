@@ -1,1 +1,1 @@
-Deltahacks
+EasyDocs reduces the time clinicians spend on paperwork by automatically providing them with up to date electronic patient information. This helps doctors learn of their patients' health condition and risks more efficiently, allowing for more time with patients and less time with paper.
