@@ -1,104 +1,97 @@
 from django.db import models
-import datetime
 
-
-class HCP(models.Model):
-    employee_number = models.IntegerField(unique=True)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+class SideEffects(models.Model):
+    effect = models.CharField(max_length = 100, blank=True, null=True)
     
     def __str__(self):
-        return str(self.employee_number) + " -- " + self.first_name + " " + self.last_name
+        return self.effect
 
-    def display(self):
-        return str(self)
-    class Meta:
-        verbose_name_plural = "Healthcare Providers"
-
-class Medication(models.Model):
-    name = models.CharField(max_length=30)
-    start_date = models.DateTimeField(blank=True, null=True)
-    end_date = models.DateTimeField(blank=True, null=True)
-        
+class Treatments(models.Model):
+    name                    = models.CharField(max_length=30, blank=True, null=True)
+    new                     = models.BooleanField(default=False)
+    side_effects            = models.ManyToManyField(SideEffects, blank=True, null=True)
+    
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name_plural = "Medications"
+        verbose_name_plural = "Treatments"
 
-class Side_Effects(models.Model):
-    side_effect = models.CharField(max_length=30)
-    medication = models.ForeignKey('Medication', on_delete = models.CASCADE)
+
+class Conditions(models.Model):
+    name                    = models.CharField(max_length=30, blank=True, null=True)
+    treatments              = models.ManyToManyField(Treatments)
+    side_effects            = models.ManyToManyField(SideEffects, blank=True, null=True)
     
     def __str__(self):
-        return self.side_effect
+        return self.name
 
     class Meta:
-        verbose_name_plural = "Side Effects"
+        verbose_name_plural = "Conditions"
 
-class Incompatible(models.Model):
-    medication = models.TextField(max_length = 1024*2)
+
+
+class FamilyHistory(models.Model):
+  FAMILY_MEMBER_CHOICES = (
+    ('Father', 'Father'),
+    ('Mother', 'Mother'),
+    ('Grandfather', 'Grandfather'),
+    ('Grandmother', 'Grandmother'),
+    ('Sibling', 'Sibling')
+  )
+  family_member = models.CharField(choices=FAMILY_MEMBER_CHOICES, max_length=100)
+  condition = models.ManyToManyField(Conditions)
+
+
+class ActiveConditions(models.Model):
+    diagnosis_date          = models.DateField(blank=True, null=True)
+    treatment_start_date    = models.DateField(blank=True, null=True)
+    treatment_renewal_date  = models.DateField(blank=True, null=True)
+    condition               = models.ForeignKey(Conditions, on_delete=models.CASCADE)
+    treatment               = models.ManyToManyField(Treatments, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Active Conditions"
+
+
+"""
+class Incompatibilities(models.Model):
+    #treatment             = models.ForeignKey(Treatments, on_delete=models.CASCADE)
+    incompat_treatments   = models.ForeignKey(Treatments, on_delete=models.CASCADE)
+    incompat_conditions   = models.ForeignKey(Conditions, on_delete=models.CASCADE)       
+
     
     class Meta:
         verbose_name_plural = "Incompatabilities"
     
     def __str__(self):
-        return self.medication
-    
-class Condition(models.Model):
-    name = models.CharField(max_length=30)
-    medication = models.ForeignKey('Medication', on_delete = models.CASCADE)
+        return self.treatment
+"""    
 
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name_plural = "Health Conditions"
-
-class System_Affected(models.Model):
-    system = models.CharField(max_length=30)
-    condition = models.ForeignKey('Condition', on_delete = models.CASCADE)
-    
-    def __str__(self):
-        return self.system
-    
-    class Meta:
-        verbose_name_plural = "Systems Affected"
-        
 class Patient(models.Model):
     
     GENDER_CHOICES = (
         ('M', "Male"),
         ('F', 'Female')
-   )
-    
-    FAMILY_HISTORY = (
-        ('Heart Disease', 'Heart Disease - Father'),
-        ('Diabetes', 'Diabetes - Grandmother'),
-        ('Alzheimers', 'Alzheimers - Mother'),
-        ('High Blood Pressure','High Blood Pressure - Grandfather'),
-        ('Arthritis', 'Arthritis - Mother'),
-        ('Obesity', 'Obesity - Father'),
-        ('Cancer', 'Cancer - Sister'),
-        ('High Cholesterol', 'High Cholesterol - Sister'),
-        ('Asthma', 'Asthma - Brother'),
     )
     
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    sex = models.CharField(choices=GENDER_CHOICES, max_length = 6, blank=True, null=True)
-    condition = models.ForeignKey( 'Condition', on_delete = models.CASCADE)
-    phone_number = models.CharField(max_length=10, blank=True, null=True)
-    healthcard_number = models.CharField(max_length=12, blank=True, null=True)
-    medication = models.ManyToManyField(Medication, blank = True, null=True)
-    addr_line_1 = models.CharField(max_length=100, blank=True, null=True)
-    addr_line_2 = models.CharField(max_length = 100, blank=True, null=True)
-    city = models.CharField(max_length = 100, blank=True, null=True)
-    province = models.CharField(max_length = 100, blank=True, null=True)
-    country = models.CharField(max_length = 100, blank=True, null=True)
-    postal_code = models.CharField(max_length = 6, blank=True, null=True)
-    date_of_birth = models.DateField(blank=True, null=True)
-    family_history = models.CharField(choices = FAMILY_HISTORY, max_length=100, blank=True, null=True)
+    first_name          = models.CharField(max_length=30, blank=True, null=True)
+    last_name           = models.CharField(max_length=30, blank=True, null=True)
+    sex                 = models.CharField(choices=GENDER_CHOICES, max_length = 6, blank=True, null=True)
+    phone_number        = models.CharField(max_length=10, blank=True, null=True)
+    healthcard_number   = models.CharField(max_length=12, blank=True, null=True)
+    medication          = models.ManyToManyField(Treatments, blank = True, null=True)
+    address             = models.CharField(max_length=100, blank=True, null=True)
+    city                = models.CharField(max_length = 100, blank=True, null=True)
+    province            = models.CharField(max_length = 100, blank=True, null=True)
+    country             = models.CharField(max_length = 100, blank=True, null=True)
+    postal_code         = models.CharField(max_length = 6, blank=True, null=True)
+    date_of_birth       = models.DateField(blank=True, null=True)
+    family_history      = models.ManyToManyField(FamilyHistory)
+    active_conditions   = models.ManyToManyField(ActiveConditions)
     
     def __str__(self):
         return self.first_name + " " + self.last_name
@@ -112,11 +105,27 @@ class Patient(models.Model):
     class Meta:
         verbose_name_plural = "Patients"
 
-class Appointment(models.Model):
-    doctor = models.ForeignKey(HCP, on_delete = models.CASCADE)
+
+class HealthcareProviders(models.Model):
+    employee_number = models.IntegerField(unique=True)
+    name_title      = models.CharField(max_length=5, default="Dr.")
+    first_name      = models.CharField(max_length=30, blank=True, null=True)
+    last_name       = models.CharField(max_length=30, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.employee_number) + " -- " + self.first_name + " " + self.last_name
+
+    def display(self):
+        return str(self)
+    class Meta:
+        verbose_name_plural = "Healthcare Providers"
+
+
+class Appointments(models.Model):
+    healthcare_provider = models.ForeignKey(HealthcareProviders, on_delete = models.CASCADE, blank=True, null=True)
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
-    date = models.DateField(blank = True, null = True)
-    time = models.TimeField(blank = True, null = True)
+    date = models.DateField(blank = True, null=True)
+    time = models.TimeField(blank = True, null=True)
     
     def __str__(self):
         return str(self.doctor) + " - " + str(self.patient) + ": " + str(self.date) + " - " + str(self.time)

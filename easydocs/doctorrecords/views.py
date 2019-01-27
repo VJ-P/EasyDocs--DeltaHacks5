@@ -8,7 +8,7 @@ from docx.shared import Inches
 from docx.shared import Pt
 import os
 
-
+"""
 def docCreate(patient, time, filename):
     PCF = Document()
     
@@ -108,8 +108,7 @@ def docCreate(patient, time, filename):
     
     #create the form
     PCF.save(path)
-
-
+"""
 
 
 
@@ -167,7 +166,7 @@ def homepage(request):
             for apt_id in appointment_gen_list:
                 if apt_id:
                     apt = db.Appointment.objects.filter(pk=apt_id)[0]
-                    docCreate(apt.patient, now, apt.patient.first_name)
+                    #docCreate(apt.patient, now, apt.patient.first_name)
 
         if (hcp_id != -1):
             hcp_selected = db.HCP.objects.get(pk=hcp_id)
