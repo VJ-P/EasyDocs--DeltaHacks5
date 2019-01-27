@@ -1,7 +1,7 @@
 from django.db import models
 import datetime
 
-# Create your models here.
+
 class HCP(models.Model):
     employee_number = models.IntegerField(unique=True)
     first_name = models.CharField(max_length=30)
@@ -34,7 +34,6 @@ class Side_Effects(models.Model):
 
 class Incompatible(models.Model):
     medication = models.TextField(max_length = 1024*2)
-    #medication_2 = models.ForeignKey('Medication', on_delete = models.CASCADE)
     
     class Meta:
         verbose_name_plural = "Incompatible"
@@ -45,7 +44,6 @@ class Incompatible(models.Model):
 class Condition(models.Model):
     name = models.CharField(max_length=30)
     medication = models.ForeignKey('Medication', on_delete = models.CASCADE)
-    #prompt = models.ForeignKey('Prompt', on_delete = models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -56,7 +54,6 @@ class Condition(models.Model):
 class System_Affected(models.Model):
     system = models.CharField(max_length=30)
     condition = models.ForeignKey('Condition', on_delete = models.CASCADE)
-    #prompt = models.ForeignKey('Prompt', on_delete = models.CASCADE)
     
     def __str__(self):
         return self.system
