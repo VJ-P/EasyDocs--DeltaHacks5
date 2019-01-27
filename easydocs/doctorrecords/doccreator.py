@@ -4,7 +4,8 @@ from docx.shared import Pt
 from datetime import datetime
 import os
 
-def docCreate(patient, time):
+
+def docCreate(patient, time, filename):
     PCF = Document()
     
     bday = datetime.strptime(patient.date_of_birth, '%Y/%m/%d')
@@ -49,14 +50,16 @@ def docCreate(patient, time):
     p1.style = PCF.styles['Normal']
 
     p = PCF.add_paragraph('')
-    p.add_run('Date: \t\t' + time).bold = True
-    p.add_run(now)
+    p.add_run('Date: \t\t\t\t\t').bold = True
+    p.add_run(time.strftime("%Y-%m-%d"))
 
     PCF.add_heading('Patient Information', 1)
-    PCF.add_paragraph('Name: \t\t' + patient.full_name)
+    PCF.add_paragraph('Name: \t\t' + str(patient.full_name()))
     PCF.add_paragraph('Gender: \t\t' + patient.sex)
-    PCF.add_paragraph('Date of Birth: \t' + patient.date_of_birth + '\t\t\t Age:\t' + age)
-    PCF.add_paragraph('Address: \t\t' + patient.full_address)
+
+    PCF.add_paragraph('Date of Birth: \t' + patient.date_of_birth.strftime("%Y-%m-%d") + '\t\t\t Age:\t' + age)
+    PCF.add_paragraph('Address: \t\t' + str(patient.full_address()))
+
     PCF.add_paragraph('Phone: \t\t' + patient.phone_number)
     PCF.add_paragraph('HCN: \t\t\t' + patient.healthcard_number)
 
@@ -66,18 +69,18 @@ def docCreate(patient, time):
     p.add_run('Notes: ').bold = True
 
     PCF.add_heading("Active Medications", 1)
-    ###run a loop for each active medication
-    #   PCF.add_heading(medication, 2)
-    #   PCF.add_paragraph('Started: 				' +)
-    #   PCF.add_paragraph('Perscription Ends:	' +)
-    #   PCF.add_heading("Possible Side Effects")
+    for med in Medication
+        PCF.add_heading(medication, 2)
+        PCF.add_paragraph('Started: 				' +)
+        PCF.add_paragraph('Perscription Ends:	' +)
+        PCF.add_heading("Possible Side Effects")
         ###run loop for each side effect
     #   document.add_paragraph(
     #       'first item in unordered list', style='List Bullet'
     #   )
-    #   PCF.add_paragraph('Notice Effects   Yes   No')
-    #   p = PCF.add_paragraph('')
-    #   p.add_run('Notes: ').bold = True
+        PCF.add_paragraph('Notice Effects   Yes   No')
+        p = PCF.add_paragraph('')
+        p.add_run('Notes: ').bold = True
 
     PCF.add_heading('Ongoing Conditions', 1)
     ###run a loop for each Ongoing Condition
@@ -96,7 +99,9 @@ def docCreate(patient, time):
 
     PCF.add_heading('Additional Notes: ', 1)
 
-    filename='test.docx'
-    filepath = os.path.join(r'C:\Users\108vi\Desktop', filename)
+    path_relative='export_docs/' + filename + '.docx'
+    path = os.path.join(os.path.dirname(__file__), path_relative)
+    
+    print("Saving...")
     #create the form
-    PCF.save(filepath)
+    PCF.save(path)
