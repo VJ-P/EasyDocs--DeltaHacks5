@@ -63,6 +63,10 @@
 			<input name="generate" type="submit" value="Generate Note Templates">
 			{%endif%}
 		</div>
+		
+		{% if DownloadLink %}
+		<a href="{{ DownloadLink }}"> Download </a>
+		{% endif %}
 	</form>
 
 	<script src="https://code.jquery.com/jquery-3.3.1.js"></script>

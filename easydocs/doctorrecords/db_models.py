@@ -166,7 +166,7 @@ class Appointments(models.Model):
     time = models.TimeField(blank = True, null=True)
 
     def __str__(self):
-        return str(self.healthcare_provider) + " - " + str(self.patient) + ": " + str(self.date) + " - " + str(self.time)
+        return str(self.date) + " " + str(self.patient)
 
     class Meta:
         verbose_name_plural = "Appointments"

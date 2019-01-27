@@ -1,5 +1,7 @@
 # Imports
 from django.shortcuts import render
+from django.http import HttpResponse
+import zipfile
 
 import datetime
 from . import db_models as db
@@ -9,7 +11,54 @@ from docx.shared import Pt
 import os
 
 
-def docCreate(appointment, time, filename):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def zipdir(path, ziph):
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            ziph.write(os.path.join(root, file))
+
+def pathify(path):
+    if(path.endswith(".zip")):
+        print("PATH" + os.path.dirname(__file__))
+    return os.path.join(os.path.dirname(__file__), path)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def docCreate(appointment, time, filepath):
     patient = appointment.patient
     PCF = Document()
     
@@ -99,12 +148,9 @@ def docCreate(appointment, time, filename):
     #   p1 = PCF.add_paragraph('\tAge, gender')
 
     PCF.add_heading('Additional Notes: ', 1)
-
-    path_relative='export_docs' + ('\\' if os.name == 'nt' else '/') + filename + '.docx'
-    path = os.path.join(os.path.dirname(__file__), path_relative)
     
     #create the form
-    PCF.save(path)
+    PCF.save(filepath)
 
 
 
@@ -136,6 +182,7 @@ def homepage(request):
 
     hcp_selected = None
     appointment_list = None
+    download_link = None
 
     date_start_str = request.POST.get('date_Start')
     date_end_str   = request.POST.get('date_End')
@@ -158,11 +205,32 @@ def homepage(request):
 
         appointment_gen_list = request.POST.getlist('appointments')
 
-        if request.POST.get("generate"):
-            for apt_id in appointment_gen_list:
-                if apt_id:
-                    apt = db.Appointments.objects.filter(pk=apt_id)[0]
-                    docCreate(apt, now, apt.patient.first_name)
+        if appointment_gen_list:
+            appointment_gen_list = list(filter(None, appointment_gen_list))
+            appointment_gen_list = list(map(lambda x: db.Appointments.objects.get(pk=x), appointment_gen_list))
+            appointment_gen_list = list(map(lambda x: [x, str(x) + ".docx"], appointment_gen_list))
+
+        if request.POST.get('generate'):
+            #delete existing files
+            for filename in os.listdir(pathify('export_docs')):
+                if not filename.startswith('.'):
+                    os.unlink(pathify('export_docs' + '/' + filename))
+            for filename in os.listdir(pathify('downloads')):
+                if not filename.startswith('.'):
+                    os.unlink(pathify('downloads' + '/' + filename))
+
+            #generate new ones
+            for apt in appointment_gen_list:
+                docCreate(apt[0], now, pathify("export_docs/" +apt[1]))
+
+            #zip?
+            if len(appointment_gen_list) > 1:
+                zipf = zipfile.ZipFile(pathify('downloads/docsdocs.zip'), 'w', zipfile.ZIP_STORED)
+                zipdir(pathify('export_docs'), zipf)
+                zipf.close()
+                download_link = "/download/zip/docsdocs.zip"
+            else:
+                download_link = "/download/docx/" + appointment_gen_list[0][1]
 
         if (hcp_id != -1):
             hcp_selected = db.HealthcareProviders.objects.get(pk=hcp_id)
@@ -173,15 +241,46 @@ def homepage(request):
     
     return render(request, 'home.html',
     {
-        'todayYYYYMMDD':            now.strftime("%Y-%m-%d"),
-        'todayWeekday':             now.strftime("%A"),
         'HealthcareProviders':      hcpList,
         'SelectedHCP':              hcp_selected,
         'Appointments':             appointment_list,
         'StartDate':                date_start,
-        'EndDate':                  date_end
+        'EndDate':                  date_end,
+        'DownloadLink':             download_link
     })
 
 
-#def download(request, filename):
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def downloadzip(request, filename):
+    with open(os.path.join(os.path.dirname(__file__), "downloads/" + filename) , 'rb') as myzipfile:
+        response = HttpResponse(myzipfile.read())
+        response['content_type'] = 'application/zip'
+        response['Content-Disposition'] = 'attachment;filename=file.zip'
+        return response
+
+def downloaddocx(request, filename):
+    with open(pathify("export_docs/" + filename) , 'rb') as docx:
+        response = HttpResponse(docx.read())
+        response['content_type'] = 'application/docx'
+        response['Content-Disposition'] = 'attachment;filename=file.docx'
+        return response
