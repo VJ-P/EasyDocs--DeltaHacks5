@@ -3,6 +3,7 @@ import datetime
 
 # Create your models here.
 class HCP(models.Model):
+    employee_number = models.IntegerField(unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     
