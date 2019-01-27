@@ -11,7 +11,7 @@ class HCP(models.Model):
         return self.first_name + " " + self.last_name
 
     class Meta:
-        verbose_name_plural = "HCP"
+        verbose_name_plural = "Healthcare Providers"
 
 class Medication(models.Model):
     name = models.CharField(max_length=30)
@@ -20,7 +20,7 @@ class Medication(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = "Medication"
+        verbose_name_plural = "Medications"
 
 class Side_Effects(models.Model):
     side_effect = models.CharField(max_length=30)
@@ -30,13 +30,13 @@ class Side_Effects(models.Model):
         return self.side_effect
 
     class Meta:
-        verbose_name_plural = "Side_Effects"
+        verbose_name_plural = "Side Effects"
 
 class Incompatible(models.Model):
     medication = models.TextField(max_length = 1024*2)
     
     class Meta:
-        verbose_name_plural = "Incompatible"
+        verbose_name_plural = "Incompatabilities"
     
     def __str__(self):
         return self.medication
@@ -49,7 +49,7 @@ class Condition(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = "Condition"
+        verbose_name_plural = "Health Conditions"
 
 class System_Affected(models.Model):
     system = models.CharField(max_length=30)
@@ -59,7 +59,7 @@ class System_Affected(models.Model):
         return self.system
     
     class Meta:
-        verbose_name_plural = "System Affected"
+        verbose_name_plural = "Systems Affected"
     
 class Patient(models.Model):
     first_name = models.CharField(max_length=30)
@@ -70,7 +70,7 @@ class Patient(models.Model):
         return self.first_name + " " + self.last_name
     
     class Meta:
-        verbose_name_plural = "Patient"
+        verbose_name_plural = "Patients"
 
 class Appointment(models.Model):
     doctor = models.ForeignKey(HCP, on_delete = models.CASCADE)
@@ -82,4 +82,4 @@ class Appointment(models.Model):
         return self.doctor + " - " + self.patient + ": " + self.date + " - " + self.time
     
     class Meta:
-        verbose_name_plural = "Appointment"
+        verbose_name_plural = "Appointments"
