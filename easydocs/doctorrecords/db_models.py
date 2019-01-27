@@ -2,7 +2,7 @@ from django.db import models
 
 class SideEffects(models.Model):
     effect = models.CharField(max_length = 100, blank=True, null=True)
-    
+
     def __str__(self):
         return self.effect
 
@@ -10,7 +10,7 @@ class Treatments(models.Model):
     name                    = models.CharField(max_length=30, blank=True, null=True)
     new                     = models.BooleanField(default=False)
     side_effects            = models.ManyToManyField(SideEffects, blank=True, null=True)
-    
+
     def __str__(self):
         return self.name
 
@@ -22,7 +22,7 @@ class Conditions(models.Model):
     name                    = models.CharField(max_length=30, blank=True, null=True)
     treatments              = models.ManyToManyField(Treatments)
     side_effects            = models.ManyToManyField(SideEffects, blank=True, null=True)
-    
+
     def __str__(self):
         return self.name
 
@@ -61,22 +61,22 @@ class ActiveConditions(models.Model):
 class Incompatibilities(models.Model):
     treatment             = models.ForeignKey(Treatments, on_delete=models.CASCADE, related_name="treatment_queried")
     incompat_treatments   = models.ForeignKey(Treatments, on_delete=models.CASCADE, related_name="treatment_compared_to")
-    incompat_conditions   = models.ForeignKey(Conditions, on_delete=models.CASCADE)       
+    incompat_conditions   = models.ForeignKey(Conditions, on_delete=models.CASCADE)
 
-    
+
     class Meta:
         verbose_name_plural = "Incompatabilities"
-    
+
     def __str__(self):
-        return self.treatment  
+        return self.treatment
 
 class Patient(models.Model):
-    
+
     GENDER_CHOICES = (
         ('M', "Male"),
         ('F', 'Female')
     )
-    
+
     first_name          = models.CharField(max_length=30, blank=True, null=True)
     last_name           = models.CharField(max_length=30, blank=True, null=True)
     sex                 = models.CharField(choices=GENDER_CHOICES, max_length = 6, blank=True, null=True)
@@ -91,16 +91,16 @@ class Patient(models.Model):
     date_of_birth       = models.DateField(blank=True, null=True)
     family_history      = models.ManyToManyField(FamilyHistory)
     active_conditions   = models.ManyToManyField(ActiveConditions)
-    
+
     def __str__(self):
         return self.first_name + " " + self.last_name
-    
+
     def full_name(self):
         return self.first_name + " " + self.last_name
-    
+
     def full_address(self):
         return str(self.addr_line_1) + ", " + str(self.addr_line_2) + ", " + str(self.city) + ", " + str(self.province) + ", " + str(self.country) + ", " + str(self.postal_code)
-    
+
     class Meta:
         verbose_name_plural = "Patients"
 
@@ -125,9 +125,9 @@ class Appointments(models.Model):
     patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
     date = models.DateField(blank = True, null=True)
     time = models.TimeField(blank = True, null=True)
-    
+
     def __str__(self):
-        return str(self.doctor) + " - " + str(self.patient) + ": " + str(self.date) + " - " + str(self.time)
-    
+        return str(self.healthcare_provider) + " - " + str(self.patient) + ": " + str(self.date) + " - " + str(self.time)
+
     class Meta:
         verbose_name_plural = "Appointments"
