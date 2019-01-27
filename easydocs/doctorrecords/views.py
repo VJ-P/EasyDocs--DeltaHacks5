@@ -14,6 +14,41 @@ import os
 
 
 
+def get_patient_age(patient):
+        today = datetime.date.today()
+        dob = patient.date_of_birth
+        
+        return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+    
+def is_patient_at_risk(patient):
+    
+    lst = []
+    fmcond = []
+    for fammem in patient.family_history.all():
+        for cond in fammem.condition.all():
+            fmcond.append(cond.name.lower())
+
+    print(fmcond)
+    #print(list(map((lambda x : x.content), patient.family_history.all())))
+    age = get_patient_age(patient)
+    condition = list(map((lambda x : x.condition.name.lower()), patient.active_conditions.all()))
+    
+    if age > 65 and "diabetes" in fmcond:
+        lst.append("At risk of kidney damage due to age and health history")
+    if "migraines" in fmcond:
+        lst.append("At risk of serotonin syndrome due to family history")
+    if age > 15 and age < 40 and "depression" in fmcond:
+        lst.append("At risk for depression to age and health history")
+    if age > 50 and "osteoporosis" in fmcond:
+        lst.append("At risk for weak bone density to age and health history")
+
+    if age > 40 and patient.sex[0]=="M" and "cancer" in fmcond:
+        lst.append("At risk for testicular cancer due to age and sex and health history")
+    if age > 40 and patient.sex[0] == "F" and "cancer" in fmcond:
+        lst.append("At risk for breast cancer")
+
+    print(lst)
+    return lst
 
 
 
@@ -151,8 +186,8 @@ def docCreate(appointment, time, filepath):
         p.add_run('Notes: ').bold = True
         PCF.add_paragraph()
 
-    PCF.add_heading('Potential Risks', 1)
-    for i in patient.is_patient_at_risk():
+    PCF.add_heading('Potential Risks:', 1)
+    for i in is_patient_at_risk(patient):
         PCF.add_paragraph(i, style='List Bullet')
 
     PCF.add_heading('Additional Notes: ', 1)
