@@ -5,15 +5,16 @@ import datetime
 from . import models
 
 
-# Create your views here.
+# Create your views here.s
 def homepage(request):
     hcpList = models.HCP.objects.all()
     now = datetime.datetime.now()
 
-    if request.method == 'POST':
-        answer = request.POST['dds_HCP']
+    if request.POST:
+        selectedHCP = models.HCP.objects.get(pk=request.POST.get('dds_HCPs'))
     else:
-        answer = "none"
+        selectedHCP = hcpList[0]
+
 
     if(request.GET.get('btn_searchHCP')):
         hcp = request.GET.get('textbox_HCP')
@@ -26,5 +27,5 @@ def homepage(request):
         'todayYYYYMMDD':            now.strftime("%Y-%m-%d"),
         'todayWeekday':             now.strftime("%A"),
         'hcpList':                  hcpList,
-        'ans':                      answer
+        'selectedHCP':                   selectedHCP
     })
