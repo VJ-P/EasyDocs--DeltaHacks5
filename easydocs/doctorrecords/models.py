@@ -10,6 +10,8 @@ class HCP(models.Model):
     def __str__(self):
         return str(self.employee_number) + " -- " + self.first_name + " " + self.last_name
 
+    def display(self):
+        return str(self)
     class Meta:
         verbose_name_plural = "Healthcare Providers"
 
