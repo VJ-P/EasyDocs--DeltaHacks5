@@ -1,1 +1,1 @@
-EasyDocs reduces the time doctors take to identify issues and ensures all risks are taken into account, and addresses all possible health concerns to reduces the amount of time doctors take to write as the data is already provided.
+EasyDocs reduces the time clinicians spend on paperwork by automatically providing them with up to date electronic patient information. This helps doctors learn of their patients' health condition and risks more efficiently, allowing for more time with the patient and less time bogged down with busywork.
