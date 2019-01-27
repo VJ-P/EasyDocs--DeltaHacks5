@@ -48,11 +48,13 @@ def docCreate(appointment, time, filename):
 
     p1 = PCF.add_paragraph('')
     p1.add_run('Healthcare Practitioner: ').bold = True
-    p1.add_run("\t\tDr. Melvin Hobbs")
+    p1.add_run("\tDr. Melvin Hobbs")
     p1.style = PCF.styles['Normal']
 
     p = PCF.add_paragraph('')
-    p.add_run('Date of Appointment: \t\t\t').bold = True
+    p.add_run('Date of Appointment: \t\t').bold = True
+    p.add_run(appointment.date("%Y-%m-%d") + "\t\t")
+    p.add_run('Date of Appointment: \t\t').bold = True
     p.add_run(time.strftime("%Y-%m-%d"))
     
     p = PCF.add_paragraph('')
