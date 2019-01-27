@@ -57,10 +57,10 @@ class ActiveConditions(models.Model):
         verbose_name_plural = "Active Conditions"
 
 
-"""
+
 class Incompatibilities(models.Model):
-    #treatment             = models.ForeignKey(Treatments, on_delete=models.CASCADE)
-    incompat_treatments   = models.ForeignKey(Treatments, on_delete=models.CASCADE)
+    treatment             = models.ForeignKey(Treatments, on_delete=models.CASCADE, related_name="treatment_queried")
+    incompat_treatments   = models.ForeignKey(Treatments, on_delete=models.CASCADE, related_name="treatment_compared_to")
     incompat_conditions   = models.ForeignKey(Conditions, on_delete=models.CASCADE)       
 
     
@@ -68,8 +68,7 @@ class Incompatibilities(models.Model):
         verbose_name_plural = "Incompatabilities"
     
     def __str__(self):
-        return self.treatment
-"""    
+        return self.treatment  
 
 class Patient(models.Model):
     
