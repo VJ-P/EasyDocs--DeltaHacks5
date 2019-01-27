@@ -1,1 +1,1 @@
-Deltahacks
+EasyDocs reduces the time doctors take to identify issues and ensures all risks are taken into account, and addresses all possible health concerns to reduces the amount of time doctors take to write as the data is already provided.
