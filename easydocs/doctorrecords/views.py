@@ -145,8 +145,8 @@ def docCreate(appointment, time, filepath):
         for NT in OC.condition.new_treatments().all():    
             p.add_run(NT.name + ", ").italic = True
         PCF.add_paragraph("Incompatible Treatments:\t\t\t")
-        for treat in get_conflicting_meds(patient):
-            PCF.add_paragraph(treat.name, style='List Bullet')
+        for treats in get_conflicting_meds(patient):
+            PCF.add_paragraph(treats[0].name + " - " + treats[1].name, style='List Bullet')
         p = PCF.add_paragraph('')
         p.add_run('Notes: ').bold = True
         PCF.add_paragraph()
@@ -291,23 +291,24 @@ def intersection(lst1, lst2):
     
 #CALL THIS FUNCTION ABOVE WITH A PATIENT
 def get_conflicting_meds(patient):
-    cur_medication = list(patient.medication.all())
-    cur_treatments = list(map((lambda x: x.get_treatment()), patient.active_conditions.all()))
-    
-    conflicting_meds = []
-    for treat in cur_treatments:
-        conflicting_meds.extend(list(map((lambda x: x.incompat_treatments), db.Incompatibilities.objects.filter(treatment=treat))))
-        conflicting_meds.extend(list(map((lambda x: x.treatment), db.Incompatibilities.objects.filter(incompat_treatments=treat))))
+    cur_medication = set(patient.medication.all())
+    cur_treatments = set(map((lambda x: x.get_treatment()), patient.active_conditions.all()))
+    all_treatments = cur_medication.union(cur_treatments)
 
-    all_treats=list(set([*cur_treatments, *cur_medication]))
+    conflicting_treatments = set()
 
-    print(all_treats)
-    print(conflicting_meds)
+    for treat in all_treatments:
+        unallowed_treatments = list(map((lambda x: x.incompat_treatments), db.Incompatibilities.objects.filter(treatment=treat)))
+        unallowed_treatments.extend(list(map((lambda x: x.treatment), db.Incompatibilities.objects.filter(incompat_treatments=treat))))
 
-    return intersection(all_treats, conflicting_meds)
-    # cur_set = set(cur_treatments)
-    # conflict_set = set(conflicting_meds)
+        conflicting_treatments = list(conflicting_treatments)
+        for bad_treat in unallowed_treatments:
+            if bad_treat in all_treatments and [bad_treat, treat] not in conflicting_treatments and [treat, bad_treat] not in conflicting_treatments:
+                conflicting_treatments.append([treat, bad_treat])
 
-    # return list(cur_set.intersection(conflict_set))
+    for lst in conflicting_treatments:
+        print(lst[0].name + " " + lst[1].name)
+
+    return list(conflicting_treatments)
     
     
