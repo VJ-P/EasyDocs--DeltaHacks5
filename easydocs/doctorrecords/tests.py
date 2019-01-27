@@ -1,6 +1,10 @@
 from django.test import TestCase
 
-import views
+#import views
+from models import HCP
 
-print(views._todayYYYMMDD())
-print(views._todayWeekday())
+
+
+
+#print(views._todayYYYMMDD())
+#print(views._todayWeekday())
