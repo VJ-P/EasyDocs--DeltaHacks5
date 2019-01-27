@@ -3,7 +3,8 @@ from django.test import TestCase
 #import views
 from models import HCP
 
-print(HCP.objects.get(first_name="Bob"))
+print(HCP)
+#print(HCP.objects.get(first_name="Bob"))
 
 
 
