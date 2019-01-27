@@ -1,8 +1,9 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
 	<title>Doc's Easy Docs</title>
-	<link rel="stylesheet" type="text/css" href="app.css">
+	<link rel="stylesheet" type="text/css" href={% static "app.css" %}>
 </head>
 <body>
 <form method='POST'>
@@ -28,17 +29,16 @@
 		{% endfor %}
 	</select>
 
-	<div id="date_Start">
+	<div id="dates">
 		Start:
 		<input onchange="this.form.submit()" type="date" name="date_Start" value="{{ StartDate|date:"Y-m-d" }}">
-	</div>
-	<div id="date_End">
 		End:
 		<input onchange="this.form.submit()" type="date" name="date_End" value="{{ EndDate|date:"Y-m-d" }}">
 	</div>
 	<div id="btn_Today"><button>Today</button></div>
 
 	<div id="tbl_Appointments">
+		{% if Appointments %}
 		Appointment List: 
 		<table class="tg">
 			<tr>
@@ -52,9 +52,10 @@
 				<td>{{ apt.patient.full_name }}</td>
 				<td>{{ apt.doctor.display }}</td>
 				<td>{{ apt.date }}</td>
-				<td>{{ apt.date }}</td>
+				<td>{{ apt.time }}</td>
 			</tr>
 			{% endfor %}
+			{%endif%}
 		</table>
 	</div>
 </form>
