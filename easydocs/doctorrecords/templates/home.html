@@ -1,6 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>Doc's Easy Docs</title>
+	<link rel="stylesheet" type="text/css" href="app.css">
+</head>
+<body>
+<form method='POST'>
+	{% csrf_token %}
+	<h1>
+		{% if SelectedHCP != None %}
+			{{ SelectedHCP.display }}
+		{% else %}
+			Please select a healthcare provider
+		{% endif %}
+	</h1>
+
+	<select name="dds_HealthcareProviders" onchange="this.form.submit()">
+		<option value="-1">------</option>
+		{% for HCP in HealthcareProviders %}
+		<option
+			{% if HCP.id == SelectedHCP.id %}
+			selected
+			{% endif %}
+			value="{{HCP.id}}">
+				{{ HCP.display }}
+		</option>
+		{% endfor %}
+	</select>
+
+	<div id="date_Start">
+		Start:
+		<input onchange="this.form.submit()" type="date" name="date_Start" value="{{ StartDate|date:"Y-m-d" }}">
+	</div>
+	<div id="date_End">
+		End:
+		<input onchange="this.form.submit()" type="date" name="date_End" value="{{ EndDate|date:"Y-m-d" }}">
+	</div>
+	<div id="btn_Today"><button>Today</button></div>
+
+	<div id="tbl_Appointments">
+		Appointment List: 
+		<table class="tg">
+			<tr>
+				<th>Doctor</th>
+				<th>Patient</th>
+				<th>Date</th>
+				<th>Time</th>
+			</tr>
+			{% for apt in Appointments %}
+			<tr>
+				<td>{{ apt.patient.full_name }}</td>
+				<td>{{ apt.doctor.display }}</td>
+				<td>{{ apt.date }}</td>
+				<td>{{ apt.date }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+</form>
+</body>
+</html>
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
 	<title>HOME PAGE</title>
 </head>
 <body>
@@ -19,9 +86,9 @@
 	</select>
 
 	<table>
-		{% for appointment in appointmentList %}
+		{% for appointment in appointments %}
 		<tr>
-			<td>{{ appointment.patient.first_name }} {{ appointment.time }}</td>
+			<td>{{ appointment.patient }}</td>
 		</tr>
 		{% endfor %}
 	</table>
@@ -33,4 +100,4 @@
 </form>
 
 </body>
-</html>
+</html> -->

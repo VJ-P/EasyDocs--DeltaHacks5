@@ -11,25 +11,22 @@ def homepage(request):
     now = datetime.datetime.now()
 
     if request.POST:
-        selectedHCP = models.HCP.objects.get(pk=request.POST.get('dds_HCPs'))
+        selectedHCP = models.HCP.objects.get(pk=request.POST.get('dds_HealthcareProviders'))
+        appointmentList = models.Appointment.objects.filter(doctor=selectedHCP)
     else:
-        selectedHCP = hcpList[0]
+        selectedHCP = None
+        appointmentList = None
+    
 
-    appointmentList = models.Appointment.objects.filter(doctor=selectedHCP)
-
-
-
-    if(request.GET.get('btn_searchHCP')):
-        hcp = request.GET.get('textbox_HCP')
-    else:
-        hcp = "Not found..."
 
     
     return render(request, 'home.html',
     {
         'todayYYYYMMDD':            now.strftime("%Y-%m-%d"),
         'todayWeekday':             now.strftime("%A"),
-        'hcpList':                  hcpList,
-        'selectedHCP':              selectedHCP,
-        'appointmentList':          appointmentList
+        'HealthcareProviders':      hcpList,
+        'SelectedHCP':              selectedHCP,
+        'Appointments':             appointmentList,
+        'StartDate':                now,
+        'EndDate':                  now
     })
