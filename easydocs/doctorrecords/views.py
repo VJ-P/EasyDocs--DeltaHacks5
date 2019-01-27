@@ -103,6 +103,7 @@ def docCreate(appointment, time, filepath):
     p = PCF.add_paragraph('')
     p.add_run('Date of Appointment: \t\t').bold = True
     p.add_run(appointment.date.strftime("%Y-%m-%d") + "\t\t")
+
     p.add_run('Date of Appointment: \t\t').bold = True
     p.add_run(time.strftime("%Y-%m-%d"))
     
@@ -143,19 +144,14 @@ def docCreate(appointment, time, filepath):
         p = PCF.add_paragraph("Recently Discovered Treatments:\t")
         for NT in OC.condition.new_treatments().all():    
             p.add_run(NT.name + ", ").italic = True
-        ###PCF.add_paragraph("Incompatible Treatments:\t\t\t" + )
+        PCF.add_paragraph("Incompatible Treatments:\t\t\t" + get_conflicting_meds(patient))
         p = PCF.add_paragraph('')
         p.add_run('Notes: ').bold = True
         PCF.add_paragraph()
 
-    #if #list name:
-     #   PCF.add_heading('Potential Risks', 1)
-      #  for x in #listname:
-       #     PCF.add_paragraph(x., style='List Bullet')
-            
-    #   run a loop for each condition
-    #   PCF.add_paragraph("Alzeimer's:")
-    #   p1 = PCF.add_paragraph('\tAge, gender')
+    PCF.add_heading('Potential Risks', 1)
+    for i in patient.is_patient_at_risk():
+        PCF.add_paragraph(i, style='List Bullet')
 
     PCF.add_heading('Additional Notes: ', 1)
     
