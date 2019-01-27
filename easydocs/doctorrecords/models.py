@@ -68,6 +68,18 @@ class Patient(models.Model):
         ('F', 'Female')
    )
     
+    FAMILY_HISTORY = (
+        ('Heart Disease', 'Heart Disease - Father'),
+        ('Diabetes', 'Diabetes - Grandmother'),
+        ('Alzheimers', 'Alzheimers - Mother'),
+        ('High Blood Pressure','High Blood Pressure - Grandfather'),
+        ('Arthritis', 'Arthritis - Mother'),
+        ('Obesity', 'Obesity - Father'),
+        ('Cancer', 'Cancer - Sister'),
+        ('High Cholesterol', 'High Cholesterol - Sister'),
+        ('Asthma', 'Asthma - Brother'),
+    )
+    
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     sex = models.CharField(choices=GENDER_CHOICES, max_length = 6, blank=True, null=True)
@@ -81,7 +93,7 @@ class Patient(models.Model):
     country = models.CharField(max_length = 100, blank=True, null=True)
     postal_code = models.CharField(max_length = 6, blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
-    
+    family_history = models.CharField(choices = FAMILY_HISTORY, max_length=100, blank=True, null=True)
     def __str__(self):
         return self.first_name + " " + self.last_name
     
