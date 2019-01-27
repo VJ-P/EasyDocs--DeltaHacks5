@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 import datetime
 from . import db_models as db
-ffrom docx import Document
+from docx import Document
 from docx.shared import Inches
 from docx.shared import Pt
 import os
