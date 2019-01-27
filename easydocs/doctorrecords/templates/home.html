@@ -17,7 +17,9 @@
 	</h1>
 
 	<select name="dds_HealthcareProviders" onchange="this.form.submit()">
+		{% if SelectedHCP == None %}
 		<option value="-1">------</option>
+		{% endif %}
 		{% for HCP in HealthcareProviders %}
 		<option
 			{% if HCP.id == SelectedHCP.id %}
@@ -31,18 +33,17 @@
 
 	<div id="dates">
 		Start:
-		<input onchange="this.form.submit()" type="date" name="date_Start" value="{{ StartDate|date:"Y-m-d" }}">
+		<input onfocusout="this.form.submit()" type="date" name="date_Start" value="{{ StartDate|date:"Y-m-d" }}">
 		End:
-		<input onchange="this.form.submit()" type="date" name="date_End" value="{{ EndDate|date:"Y-m-d" }}">
+		<input onfocusout="this.form.submit()" type="date" name="date_End" value="{{ EndDate|date:"Y-m-d" }}">
+		<input type="submit" name="btn_Today" value="Today">
 	</div>
-	<div id="btn_Today"><button>Today</button></div>
-
+	
 	<div id="tbl_Appointments">
 		{% if Appointments %}
-		Appointment List: 
+		<h3>Appointment List:</h3>
 		<table class="tg">
 			<tr>
-				<th>Doctor</th>
 				<th>Patient</th>
 				<th>Date</th>
 				<th>Time</th>
@@ -50,7 +51,6 @@
 			{% for apt in Appointments %}
 			<tr>
 				<td>{{ apt.patient.full_name }}</td>
-				<td>{{ apt.doctor.display }}</td>
 				<td>{{ apt.date }}</td>
 				<td>{{ apt.time }}</td>
 			</tr>
