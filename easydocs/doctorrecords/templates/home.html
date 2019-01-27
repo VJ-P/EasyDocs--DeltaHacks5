@@ -1,104 +1,92 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
+
 <head>
 	<title>Doc's Easy Docs</title>
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
 	<link rel="stylesheet" type="text/css" href={% static "app.css" %}>
 </head>
+
 <body>
-<form method='POST'>
-	{% csrf_token %}
-	<h1>
-		{% if SelectedHCP != None %}
+	<form method='POST'>
+		{% csrf_token %}
+		<h1>
+			{% if SelectedHCP != None %}
 			{{ SelectedHCP.display }}
-		{% else %}
+			{% else %}
 			Please select a healthcare provider
-		{% endif %}
-	</h1>
-
-	<select name="dds_HealthcareProviders" onchange="this.form.submit()">
-		{% if SelectedHCP == None %}
-		<option value="-1">------</option>
-		{% endif %}
-		{% for HCP in HealthcareProviders %}
-		<option
-			{% if HCP.id == SelectedHCP.id %}
-			selected
 			{% endif %}
-			value="{{HCP.id}}">
+		</h1>
+
+		<select name="dds_HealthcareProviders" onchange="this.form.submit()">
+			{% if SelectedHCP == None %}
+			<option value="-1">------</option>
+			{% endif %}
+			{% for HCP in HealthcareProviders %}
+			<option {% if HCP.id == SelectedHCP.id %} selected {% endif %} value="{{HCP.id}}">
 				{{ HCP.display }}
-		</option>
-		{% endfor %}
-	</select>
-
-	<div id="dates">
-		Start:
-		<input onfocusout="this.form.submit()" type="date" name="date_Start" value="{{ StartDate|date:"Y-m-d" }}">
-		End:
-		<input onfocusout="this.form.submit()" type="date" name="date_End" value="{{ EndDate|date:"Y-m-d" }}">
-		<input type="submit" name="btn_Today" value="Today">
-	</div>
-	
-	<div id="tbl_Appointments">
-		{% if Appointments %}
-		<h3>Appointment List:</h3>
-		<table class="tg">
-			<tr>
-				<th>Patient</th>
-				<th>Date</th>
-				<th>Time</th>
-			</tr>
-			{% for apt in Appointments %}
-			<tr>
-				<td>{{ apt.patient.full_name }}</td>
-				<td>{{ apt.date }}</td>
-				<td>{{ apt.time }}</td>
-			</tr>
+			</option>
 			{% endfor %}
+		</select>
+
+		<div id="dates">
+			Start:
+			<input onfocusout="this.form.submit()" type="date" name="date_Start" value="{{ StartDate|date:"Y-m-d" }}">
+			End:
+			<input onfocusout="this.form.submit()" type="date" name="date_End" value="{{ EndDate|date:"Y-m-d" }}">
+			<input type="submit" name="btn_Today" value="Today">
+		</div>
+
+		<div class="display">
+			{% if Appointments %}
+			<h3>Appointment List:</h3>
+			<table id="tbl_Appointments" class="display">
+				<thead>
+					<tr>
+						<th>Patient</th>
+						<th>Date</th>
+						<th>Time</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for apt in Appointments %}
+					<tr value={{ apt.id }}>
+						<input type="hidden" name="appointments">
+						<td>{{ apt.patient.full_name }}</td>
+						<td>{{ apt.date }}</td>
+						<td>{{ apt.time }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<input type="submit" value="Generate Note Templates">
 			{%endif%}
-		</table>
-	</div>
-</form>
+		</div>
+	</form>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+	<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			var table = $('#tbl_Appointments').DataTable();
+
+			// git blame can be a liar sometimes, just sayin
+			$('#tbl_Appointments tbody').on('click', 'tr', function () {
+				$(this).toggleClass('selected');
+				$input = $(this).find('input');
+				if ($(this).hasClass('selected'))
+				{
+					$input.attr('value', $(this).attr('value'))
+				}
+				else
+				{
+					$input.removeAttr('value')
+				}
+			});
+		});
+	</script>
+
 </body>
+
 </html>
-
-
-
-
-
-<!-- <!DOCTYPE html>
-<html>
-<head>
-	<title>HOME PAGE</title>
-</head>
-<body>
-<h4>Select a Healthcare Provider</h4>
-
-<form method="POST">
-	{% csrf_token %}
-	<select name="dds_HCPs" onchange="this.form.submit()">
-		{% for hcp in hcpList %}
-			<option 
-				{% if hcp.id == selectedHCP.id %}
-				selected
-				{% endif %}
-				value="{{ hcp.id }}"> {{ hcp.employee_number }} -- {{ hcp.first_name }} {{ hcp.last_name }} </option>
-		{% endfor %}
-	</select>
-
-	<table>
-		{% for appointment in appointments %}
-		<tr>
-			<td>{{ appointment.patient }}</td>
-		</tr>
-		{% endfor %}
-	</table>
-</form>
-
-<form action="#" method="GET">
-	<input type="text" value="Enter HCP Name..." name="textbox_HCP"/>
-	<input type="submit" class="btn" value="Search" name="btn_searchHCP">
-</form>
-
-</body>
-</html> -->

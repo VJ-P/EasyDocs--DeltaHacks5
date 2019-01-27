@@ -34,18 +34,16 @@ def homepage(request):
 
         hcp_id = (int) (request.POST.get('dds_HealthcareProviders'))
 
+        appointment_gen_list = request.POST.getlist('appointments')
+
+        print(appointment_gen_list)
+
         if (hcp_id != -1):
             hcp_selected = models.HCP.objects.get(pk=hcp_id)
 
             if date_start and date_end: 
                 appointment_list = models.Appointment.objects.filter(doctor=hcp_selected).filter(date__range=[date_start_str, date_end_str]).order_by('date')
-
         
-        
-    
-    
-
-
     
     return render(request, 'home.html',
     {
