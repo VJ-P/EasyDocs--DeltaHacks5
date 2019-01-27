@@ -104,9 +104,7 @@ def docCreate(appointment, time, filepath):
     p.add_run('Date of Appointment: \t\t').bold = True
     p.add_run(appointment.date.strftime("%Y-%m-%d") + "\t\t")
 
-    p.add_run(appointment.strftime("%Y-%m-%d") + "\t\t")
-
-    p.add_run('Date of Appointment: \t\t').bold = True
+    p.add_run('Date of Note Generation: \t\t').bold = True
     p.add_run(time.strftime("%Y-%m-%d"))
     
     p = PCF.add_paragraph('')
@@ -146,7 +144,9 @@ def docCreate(appointment, time, filepath):
         p = PCF.add_paragraph("Recently Discovered Treatments:\t")
         for NT in OC.condition.new_treatments().all():    
             p.add_run(NT.name + ", ").italic = True
-        PCF.add_paragraph("Incompatible Treatments:\t\t\t" + get_conflicting_meds(patient))
+        PCF.add_paragraph("Incompatible Treatments:\t\t\t")
+        for treat in get_conflicting_meds(patient):
+            PCF.add_paragraph(treat.name, style='List Bullet')
         p = PCF.add_paragraph('')
         p.add_run('Notes: ').bold = True
         PCF.add_paragraph()
@@ -284,9 +284,30 @@ def downloaddocx(request, filename):
 
 #def download(request, filename):
     
+
+def intersection(lst1, lst2): 
+    lst3 = [value for value in lst1 if value in lst2] 
+    return lst3 
+    
 #CALL THIS FUNCTION ABOVE WITH A PATIENT
 def get_conflicting_meds(patient):
-    curr_treatment = patient.treatments
-    incompat_treatment = db.Incompatibilities.objects.filter(treatment=curr_treatment)
-    return incompat_treatment
+    cur_medication = list(patient.medication.all())
+    cur_treatments = list(map((lambda x: x.get_treatment()), patient.active_conditions.all()))
+    
+    conflicting_meds = []
+    for treat in cur_treatments:
+        conflicting_meds.extend(list(map((lambda x: x.incompat_treatments), db.Incompatibilities.objects.filter(treatment=treat))))
+        conflicting_meds.extend(list(map((lambda x: x.treatment), db.Incompatibilities.objects.filter(incompat_treatments=treat))))
+
+    all_treats=list(set([*cur_treatments, *cur_medication]))
+
+    print(all_treats)
+    print(conflicting_meds)
+
+    return intersection(all_treats, conflicting_meds)
+    # cur_set = set(cur_treatments)
+    # conflict_set = set(conflicting_meds)
+
+    # return list(cur_set.intersection(conflict_set))
+    
     

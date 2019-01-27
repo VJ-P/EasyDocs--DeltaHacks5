@@ -119,18 +119,18 @@ class Patient(models.Model):
         lst = []
         
         active_condition = str(self.active_conditions).lower()
-        if patient_age > 65 and "diabetes" in active_condition:
+        if self.get_patient_age() > 65 and "diabetes" in active_condition:
             lst.append("AT RISK FOR HEART DISEASE AND KIDNEY FAILURE")
-        elif patient_age > 55 and "migraines" in active_condition:
+        elif self.get_patient_age() > 55 and "migraines" in active_condition:
             lst.append("AT RISK FOR SEROTONIN SYNDROME")
-        elif patient_age > 50 and "depression" in active_condition:
+        elif self.get_patient_age() > 50 and "depression" in active_condition:
             lst.append("AT RISK FOR DEPRESSION")
-        elif patient_age > 40 and "osteoporosis" in active_condition:
+        elif self.get_patient_age() > 40 and "osteoporosis" in active_condition:
             lst.append("AT RISK FOR WEAK BONE DENSITY")
 
-        if patient_age > 40 and self.sex[0]=="M":
+        if self.get_patient_age() > 40 and self.sex[0]=="M":
             lst.append("AT RISK FOR TESTICULAR CANCER")
-        elif patient_age > 40 and self.sex[0] == "F":
+        elif self.get_patient_age() > 40 and self.sex[0] == "F":
             lst.append("AT RISK FOR BREAST CANCER")
             
         else:
