@@ -17,7 +17,9 @@ class HCP(models.Model):
 
 class Medication(models.Model):
     name = models.CharField(max_length=30)
-    
+    start_date = models.DateTimeField(blank=True, null=True)
+    end_date = models.DateTimeField(blank=True, null=True)
+        
     def __str__(self):
         return self.name
 
@@ -88,6 +90,7 @@ class Patient(models.Model):
     condition = models.ForeignKey( 'Condition', on_delete = models.CASCADE)
     phone_number = models.CharField(max_length=10, blank=True, null=True)
     healthcard_number = models.CharField(max_length=12, blank=True, null=True)
+    medication = models.ManyToManyField(Medication, blank = True, null=True)
     addr_line_1 = models.CharField(max_length=100, blank=True, null=True)
     addr_line_2 = models.CharField(max_length = 100, blank=True, null=True)
     city = models.CharField(max_length = 100, blank=True, null=True)
@@ -96,6 +99,7 @@ class Patient(models.Model):
     postal_code = models.CharField(max_length = 6, blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
     family_history = models.CharField(choices = FAMILY_HISTORY, max_length=100, blank=True, null=True)
+    
     def __str__(self):
         return self.first_name + " " + self.last_name
     
