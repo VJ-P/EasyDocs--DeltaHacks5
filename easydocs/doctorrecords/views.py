@@ -133,7 +133,7 @@ def docCreate(patient, time, filename):
 
 # Create your views here.s
 def homepage(request):
-    hcpList = db.HCP.objects.all()
+    hcpList = db.HealthcareProviders.objects.all()
 
     dt = datetime.datetime
     now = dt.now()
@@ -165,14 +165,14 @@ def homepage(request):
         if request.POST.get("generate"):
             for apt_id in appointment_gen_list:
                 if apt_id:
-                    apt = db.Appointment.objects.filter(pk=apt_id)[0]
-                    #docCreate(apt.patient, now, apt.patient.first_name)
+                    apt = db.Appointments.objects.filter(pk=apt_id)[0]
+                    docCreate(apt.patient, now, apt.patient.first_name)
 
         if (hcp_id != -1):
             hcp_selected = db.HCP.objects.get(pk=hcp_id)
 
             if date_start and date_end: 
-                appointment_list = db.Appointment.objects.filter(doctor=hcp_selected).filter(date__range=[date_start_str, date_end_str]).order_by('date')
+                appointment_list = db.Appointments.objects.filter(doctor=hcp_selected).filter(date__range=[date_start_str, date_end_str]).order_by('date')
         
     
     return render(request, 'home.html',
