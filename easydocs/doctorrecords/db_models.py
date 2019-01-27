@@ -100,7 +100,40 @@ class Patient(models.Model):
 
     def full_address(self):
         return str(self.addr_line_1) + ", " + str(self.addr_line_2) + ", " + str(self.city) + ", " + str(self.province) + ", " + str(self.country) + ", " + str(self.postal_code)
+    
+    #DOES NOT WORK. I WILL FIX IT.
+    """
+    def get_conflicting_meds(patient):
+      curr_treatments = patient.treatments
+      incompat_treatments = Incompatabilities.objects.all()
+      conflicting_med_lst = []
+      for treatment in curr_treatments:
+        for incompat in incompat_treatments:
+          if treatment in incompat:
+            conflicting_med_lst.add(treatment)
+      return conflicting_med_lst
+     """
 
+    def get_patient_age(self):
+        today = date.today()
+        dob = Patient.date_of_birth()
+        
+        return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+    
+    def is_patient_at_risk(self):
+        patient_age = self.get_patient_age()
+        at_risk = True
+        if patient_age > 75:
+            return at_risk
+        elif patient_age > 60 and len(self.active_conditions)>3:
+            return at_risk
+        elif patient_age > 50 and len(self.active_conditions)>2:
+            return at_risk
+        elif patient_age > 40 and (len(self.active_conditions)>2 or len(self.medication)>2):
+            return at_risk
+        else:
+            return not at_risk
+        
     class Meta:
         verbose_name_plural = "Patients"
 
