@@ -74,7 +74,7 @@ class Incompatibilities(models.Model):
         verbose_name_plural = "Incompatabilities"
 
     def __str__(self):
-        return self.treatment
+        return str(self.treatment)
 
 class Patient(models.Model):
 
