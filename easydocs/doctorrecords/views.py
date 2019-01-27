@@ -8,12 +8,12 @@ from docx.shared import Inches
 from docx.shared import Pt
 import os
 
-"""
-def docCreate(patient, time, filename):
+
+def docCreate(appointment, time, filename):
+    patient = appointment.patient
     PCF = Document()
     
-    bday = datetime.strptime(patient.date_of_birth, '%Y/%m/%d')
-    age = (now.date() - bday).days/365
+    age = (time.date() - patient.date_of_birth).days/365
     
     #set styles
     style = PCF.styles['Title']
@@ -61,40 +61,37 @@ def docCreate(patient, time, filename):
     PCF.add_paragraph('Name: \t\t' + str(patient.full_name()))
     PCF.add_paragraph('Gender: \t\t' + patient.sex)
 
-    PCF.add_paragraph('Date of Birth: \t' + patient.date_of_birth.strftime("%Y-%m-%d") + '\t\t\t Age:\t' + age)
+    PCF.add_paragraph('Date of Birth: \t' + patient.date_of_birth.strftime("%Y-%m-%d") + '\t\t\t Age:\t' + str(age))
     PCF.add_paragraph('Address: \t\t' + str(patient.full_address()))
 
     PCF.add_paragraph('Phone: \t\t' + patient.phone_number)
     PCF.add_paragraph('HCN: \t\t\t' + patient.healthcard_number)
 
     PCF.add_heading('Family History', 1)
-    PCF.add_paragraph(patient.family_history, style='List Bullet')
+    for fam in patient.family_history.all():
+        PCF.add_paragraph(fam.family_member)
+        for condition in fam.condition.all():
+            PCF.add_paragraph(condition.name, style='List Bullet')
     p = PCF.add_paragraph('')
     p.add_run('Notes: ').bold = True
 
-    PCF.add_heading("Active Medications", 1)
-    for med in Medication
-        PCF.add_heading(medication, 2)
-        PCF.add_paragraph('Started: 				' +)
-        PCF.add_paragraph('Perscription Ends:	' +)
+    PCF.add_heading('Ongoing Conditions', 1)
+    for OC in patient.active_conditions.all():
+        PCF.add_heading(OC.condition.name, 2)
+        PCF.add_paragraph('Diagnosed:\t\t\t\t\t\t' + OC.diagnosis_date.strftime("%Y-%m-%d"))
+        PCF.add_paragraph('Method of Treatment:\t\t\t' + OC.get_treatment().name)
+        PCF.add_paragraph('Started:\t\t\t\t\t\t\t' + OC.treatment_start_date.strftime("%Y-%m-%d"))
+        PCF.add_paragraph('Perscription Ends:\t\t\t\t' + OC.treatment_renewal_date.strftime("%Y-%m-%d"))
         PCF.add_heading("Possible Side Effects")
-        ###run loop for each side effect
-    #   document.add_paragraph(
-    #       'first item in unordered list', style='List Bullet'
-    #   )
-        PCF.add_paragraph('Notice Effects   Yes   No')
+        for SE in OC.condition.side_effects.all():
+            PCF.add_paragraph(SE.effect, style='List Bullet')
+        PCF.add_paragraph("Side Effects Noticed\tYes\tNo")
+        p = PCF.add_paragraph("Recently Discovered Treatments:\t")
+        for NT in OC.condition.new_treatments().all():    
+            p.add_run(NT.name + ", ").italic = True
+        #PCF.add_paragraph("Incompatible Treatments:\t\t\t" + )
         p = PCF.add_paragraph('')
         p.add_run('Notes: ').bold = True
-
-    PCF.add_heading('Ongoing Conditions', 1)
-    ###run a loop for each Ongoing Condition
-    #   PCF.add_heading(condition, 2)
-    #   PCF.add_paragraph('Diagnosed: 				' +)
-    #   PCF.add_paragraph('Method of Treatment:	' +)
-    #   PCF.add_paragraph("New Treatments")
-    #   PCF.add_paragraph("Incompatible Treatments:")
-    #   p = PCF.add_paragraph('')
-    #   p.add_run('Notes: ').bold = True
 
     PCF.add_heading('Potential Risks', 1)
     #   run a loop for each condition
@@ -103,12 +100,11 @@ def docCreate(patient, time, filename):
 
     PCF.add_heading('Additional Notes: ', 1)
 
-    path_relative='export_docs/' + filename + '.docx'
+    path_relative='export_docs' + ('\\' if os.name == 'nt' else '/') + filename + '.docx'
     path = os.path.join(os.path.dirname(__file__), path_relative)
     
     #create the form
     PCF.save(path)
-"""
 
 
 

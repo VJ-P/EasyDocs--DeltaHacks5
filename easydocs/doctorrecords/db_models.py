@@ -26,6 +26,9 @@ class Conditions(models.Model):
     def __str__(self):
         return self.name
 
+    def new_treatments(self):
+        return self.treatments.all().filter(new=True)
+
     class Meta:
         verbose_name_plural = "Conditions"
 
@@ -52,6 +55,9 @@ class ActiveConditions(models.Model):
 
     def __str__(self):
         return str(self.condition.name)
+
+    def get_treatment(self):
+        return self.treatment.first()
 
     class Meta:
         verbose_name_plural = "Active Conditions"
@@ -99,7 +105,7 @@ class Patient(models.Model):
         return self.first_name + " " + self.last_name
 
     def full_address(self):
-        return str(self.addr_line_1) + ", " + str(self.addr_line_2) + ", " + str(self.city) + ", " + str(self.province) + ", " + str(self.country) + ", " + str(self.postal_code)
+        return  str(self.address) + ", " + str(self.city) + ", " + str(self.province) + ", " + str(self.country) + ", " + str(self.postal_code)
     
     #DOES NOT WORK. I WILL FIX IT.
     """
