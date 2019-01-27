@@ -6,16 +6,22 @@
 <body>
 <h4>Select a Healthcare Provider</h4>
 
-<form action="#" method="POST">
-	<select name="dds_HCPs">
+<form method="POST">
+		{% csrf_token %}
+	<select name="dds_HCPs" onchange="this.form.submit()">
 		{% for hcp in hcpList %}
-			<option value="{{ hcp.id }}"> {{ hcp.employee_number }} -- {{ hcp.first_name }} {{ hcp.last_name }} </option>
+			<option 
+				{% if hcp.id == selectedHCP.id %}
+				selected
+				{% endif %}
+				value="{{ hcp.id }}"> {{ hcp.employee_number }} -- {{ hcp.first_name }} {{ hcp.last_name }} </option>
 		{% endfor %}
 	</select>
-	<input type="submit" value="Select">
 </form>
 
-<p> {{ ans }} </p>
+
+<p> {{ selectedHCP.first_name }} </p>
+
 <form action="#" method="GET">
 	<input type="text" value="Enter HCP Name..." name="textbox_HCP"/>
 	<input type="submit" class="btn" value="Search" name="btn_searchHCP">
