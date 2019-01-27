@@ -2,12 +2,12 @@
 from django.shortcuts import render
 
 import datetime
-from . import models
+from . import db_models as db
 
 
 # Create your views here.s
 def homepage(request):
-    hcpList = models.HCP.objects.all()
+    hcpList = db.HCP.objects.all()
 
     dt = datetime.datetime
     now = dt.now()
@@ -39,10 +39,10 @@ def homepage(request):
         print(appointment_gen_list)
 
         if (hcp_id != -1):
-            hcp_selected = models.HCP.objects.get(pk=hcp_id)
+            hcp_selected = db.HCP.objects.get(pk=hcp_id)
 
             if date_start and date_end: 
-                appointment_list = models.Appointment.objects.filter(doctor=hcp_selected).filter(date__range=[date_start_str, date_end_str]).order_by('date')
+                appointment_list = db.Appointment.objects.filter(doctor=hcp_selected).filter(date__range=[date_start_str, date_end_str]).order_by('date')
         
     
     return render(request, 'home.html',
