@@ -104,6 +104,8 @@ def docCreate(appointment, time, filepath):
     p.add_run('Date of Appointment: \t\t').bold = True
     p.add_run(appointment.date.strftime("%Y-%m-%d") + "\t\t")
 
+    p.add_run(appointment.strftime("%Y-%m-%d") + "\t\t")
+
     p.add_run('Date of Appointment: \t\t').bold = True
     p.add_run(time.strftime("%Y-%m-%d"))
     

@@ -108,7 +108,6 @@ class Patient(models.Model):
     def full_address(self):
         return  str(self.address) + ", " + str(self.city) + ", " + str(self.province) + ", " + str(self.country) + ", " + str(self.postal_code)
     
-
     def get_patient_age(self):
         today = datetime.date.today()
         dob = self.date_of_birth
