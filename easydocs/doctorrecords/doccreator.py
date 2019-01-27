@@ -1,11 +1,15 @@
 from docx import Document
 from docx.shared import Inches
 from docx.shared import Pt
+from datetime import datetime
 import os
 
 def docCreate(patient, time):
     PCF = Document()
-
+    
+    bday = datetime.strptime(patient.date_of_birth, '%Y/%m/%d')
+    age = (datetime.today() - bday).days/365
+    
     #set styles
     style = PCF.styles['Title']
     font1 = style.font
@@ -51,18 +55,15 @@ def docCreate(patient, time):
     PCF.add_heading('Patient Information', 1)
     PCF.add_paragraph('Name: \t\t' + patient.full_name)
     PCF.add_paragraph('Gender: \t\t' + patient.sex)
-    PCF.add_paragraph('Date of Birth: \t' + patient.date_of_birth)
+    PCF.add_paragraph('Date of Birth: \t' + patient.date_of_birth + '\t\t\t Age:\t' + age)
     PCF.add_paragraph('Address: \t\t' + patient.full_address)
     PCF.add_paragraph('Phone: \t\t' + patient.phone_number)
     PCF.add_paragraph('HCN: \t\t\t' + patient.healthcard_number)
 
     PCF.add_heading('Family History', 1)
-    ###run a loop depending on the number of diseases: example below for bullet points
-    #   document.add_paragraph(
-    #       'first item in unordered list', style='List Bullet'
-    #   )
-    #   p = PCF.add_paragraph('')
-    #   p.add_run('Notes: ').bold = True
+    PCF.add_paragraph(patient.family_history, style='List Bullet')
+    p = PCF.add_paragraph('')
+    p.add_run('Notes: ').bold = True
 
     PCF.add_heading("Active Medications", 1)
     ###run a loop for each active medication
