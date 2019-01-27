@@ -153,9 +153,13 @@ def homepage(request):
     date_start = dt.strptime(date_start_str, '%Y-%m-%d') if date_start_str else None
     date_end = dt.strptime(date_end_str, '%Y-%m-%d') if date_end_str else None
     
+<<<<<<< Updated upstream
     patients = db.Patient.objects.all()
     incomp = db.Incompatibilities.objects.all()
     
+=======
+
+>>>>>>> Stashed changes
     if request.POST:
 
         if date_start and date_end and date_end < date_start:
@@ -183,11 +187,10 @@ def homepage(request):
             if date_start and date_end: 
                 appointment_list = db.Appointments.objects.filter(healthcare_provider=hcp_selected).filter(date__range=[date_start_str, date_end_str]).order_by('date')
         
-    
+    patient = db.Patient.objects.all()
+    inco = db.Incompatibilities.objects.all()
+
     return render(request, 'home.html',
-    {   
-         'patients':patients,
-         'incomp':incomp,
         'todayYYYYMMDD':            now.strftime("%Y-%m-%d"),
         'todayWeekday':             now.strftime("%A"),
         'HealthcareProviders':      hcpList,
