@@ -7,7 +7,7 @@
 <h4>Select a Healthcare Provider</h4>
 
 <form method="POST">
-		{% csrf_token %}
+	{% csrf_token %}
 	<select name="dds_HCPs" onchange="this.form.submit()">
 		{% for hcp in hcpList %}
 			<option 
