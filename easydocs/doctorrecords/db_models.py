@@ -51,7 +51,7 @@ class ActiveConditions(models.Model):
     treatment               = models.ManyToManyField(Treatments, blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return str(self.condition.name)
 
     class Meta:
         verbose_name_plural = "Active Conditions"
