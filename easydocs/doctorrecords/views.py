@@ -169,10 +169,10 @@ def homepage(request):
                     docCreate(apt.patient, now, apt.patient.first_name)
 
         if (hcp_id != -1):
-            hcp_selected = db.HCP.objects.get(pk=hcp_id)
+            hcp_selected = db.HealthcareProviders.objects.get(pk=hcp_id)
 
             if date_start and date_end: 
-                appointment_list = db.Appointments.objects.filter(doctor=hcp_selected).filter(date__range=[date_start_str, date_end_str]).order_by('date')
+                appointment_list = db.Appointments.objects.filter(healthcare_provider=hcp_selected).filter(date__range=[date_start_str, date_end_str]).order_by('date')
         
     
     return render(request, 'home.html',
