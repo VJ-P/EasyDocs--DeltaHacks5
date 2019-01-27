@@ -15,6 +15,9 @@ def homepage(request):
     else:
         selectedHCP = hcpList[0]
 
+    appointmentList = models.Appointment.objects.filter(doctor=selectedHCP)
+
+
 
     if(request.GET.get('btn_searchHCP')):
         hcp = request.GET.get('textbox_HCP')
@@ -27,5 +30,6 @@ def homepage(request):
         'todayYYYYMMDD':            now.strftime("%Y-%m-%d"),
         'todayWeekday':             now.strftime("%A"),
         'hcpList':                  hcpList,
-        'selectedHCP':                   selectedHCP
+        'selectedHCP':              selectedHCP,
+        'appointmentList':          appointmentList
     })
