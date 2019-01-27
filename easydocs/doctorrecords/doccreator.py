@@ -3,7 +3,8 @@ from docx.shared import Inches
 from docx.shared import Pt
 import os
 
-def docCreate(patient, time):
+
+def docCreate(patient, time, filename):
     PCF = Document()
 
     #set styles
@@ -45,14 +46,14 @@ def docCreate(patient, time):
     p1.style = PCF.styles['Normal']
 
     p = PCF.add_paragraph('')
-    p.add_run('Date: \t\t' + time).bold = True
-    p.add_run(now)
+    p.add_run('Date: \t\t\t\t\t').bold = True
+    p.add_run(time.strftime("%Y-%m-%d"))
 
     PCF.add_heading('Patient Information', 1)
-    PCF.add_paragraph('Name: \t\t' + patient.full_name)
+    PCF.add_paragraph('Name: \t\t' + str(patient.full_name()))
     PCF.add_paragraph('Gender: \t\t' + patient.sex)
-    PCF.add_paragraph('Date of Birth: \t' + patient.date_of_birth)
-    PCF.add_paragraph('Address: \t\t' + patient.full_address)
+    PCF.add_paragraph('Date of Birth: \t' + patient.date_of_birth.strftime("%Y-%m-%d"))
+    PCF.add_paragraph('Address: \t\t' + str(patient.full_address()))
     PCF.add_paragraph('Phone: \t\t' + patient.phone_number)
     PCF.add_paragraph('HCN: \t\t\t' + patient.healthcard_number)
 
@@ -95,7 +96,9 @@ def docCreate(patient, time):
 
     PCF.add_heading('Additional Notes: ', 1)
 
-    filename='test.docx'
-    filepath = os.path.join(r'C:\Users\108vi\Desktop', filename)
+    path_relative='export_docs/' + filename + '.docx'
+    path = os.path.join(os.path.dirname(__file__), path_relative)
+    
+    print("Saving...")
     #create the form
-    PCF.save(filepath)
+    PCF.save(path)

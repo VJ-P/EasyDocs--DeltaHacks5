@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 import datetime
 from . import db_models as db
-
+from . import doccreator as dc
 
 # Create your views here.s
 def homepage(request):
@@ -36,7 +36,12 @@ def homepage(request):
 
         appointment_gen_list = request.POST.getlist('appointments')
 
-        print(appointment_gen_list)
+        if request.POST.get("generate"):
+            for apt_id in appointment_gen_list:
+                if apt_id:
+                    apt = db.Appointment.objects.filter(pk=apt_id)[0]
+                    print(apt)
+                    dc.docCreate(apt.patient, now, apt.patient.first_name)
 
         if (hcp_id != -1):
             hcp_selected = db.HCP.objects.get(pk=hcp_id)

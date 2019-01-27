@@ -107,7 +107,7 @@ class Patient(models.Model):
         return self.first_name + " " + self.last_name
     
     def full_address(self):
-        return self.addr_line_1 + ", " + self.addr_line_2 + ", " + self.city + ", " + self.province + ", " + self.country + ", " + self.postal_code
+        return str(self.addr_line_1) + ", " + str(self.addr_line_2) + ", " + str(self.city) + ", " + str(self.province) + ", " + str(self.country) + ", " + str(self.postal_code)
     
     class Meta:
         verbose_name_plural = "Patients"
