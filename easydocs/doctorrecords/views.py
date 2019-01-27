@@ -152,7 +152,10 @@ def homepage(request):
 
     date_start = dt.strptime(date_start_str, '%Y-%m-%d') if date_start_str else None
     date_end = dt.strptime(date_end_str, '%Y-%m-%d') if date_end_str else None
-
+    
+    patients = db.Patient.objects.all()
+    incomp = db.Incompatibilities.objects.all()
+    
     if request.POST:
 
         if date_start and date_end and date_end < date_start:
@@ -170,7 +173,7 @@ def homepage(request):
 
         if request.POST.get("generate"):
             for apt_id in appointment_gen_list:
-                if apt_id:
+                if apt_id:cu
                     apt = db.Appointments.objects.filter(pk=apt_id)[0]
                     docCreate(apt, now, apt.patient.first_name)
 
@@ -182,7 +185,9 @@ def homepage(request):
         
     
     return render(request, 'home.html',
-    {
+    {   
+         'patients':patients,
+         'incomp':incomp,
         'todayYYYYMMDD':            now.strftime("%Y-%m-%d"),
         'todayWeekday':             now.strftime("%A"),
         'HealthcareProviders':      hcpList,
@@ -194,4 +199,10 @@ def homepage(request):
 
 
 #def download(request, filename):
+    
+#CALL THIS FUNCTION ABOVE WITH A PATIENT
+def get_conflicting_meds(patient):
+    curr_treatment = patient.treatments
+    incompat_treatment = db.Incompatibilities.objects.filter(treatment=curr_treatment)
+    return incompat_treatment
     

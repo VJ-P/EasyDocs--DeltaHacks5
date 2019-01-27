@@ -1,5 +1,5 @@
 from django.db import models
-
+import datetime
 class SideEffects(models.Model):
     effect = models.CharField(max_length = 100, blank=True, null=True)
 
@@ -12,7 +12,7 @@ class Treatments(models.Model):
     side_effects            = models.ManyToManyField(SideEffects, blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return str(self.name) if self.name else "HI"
 
     class Meta:
         verbose_name_plural = "Treatments"
@@ -107,21 +107,8 @@ class Patient(models.Model):
     def full_address(self):
         return  str(self.address) + ", " + str(self.city) + ", " + str(self.province) + ", " + str(self.country) + ", " + str(self.postal_code)
     
-    #DOES NOT WORK. I WILL FIX IT.
-    """
-    def get_conflicting_meds(patient):
-      curr_treatments = patient.treatments
-      incompat_treatments = Incompatabilities.objects.all()
-      conflicting_med_lst = []
-      for treatment in curr_treatments:
-        for incompat in incompat_treatments:
-          if treatment in incompat:
-            conflicting_med_lst.add(treatment)
-      return conflicting_med_lst
-     """
-
     def get_patient_age(self):
-        today = date.today()
+        today = datetime.date.today()
         dob = Patient.date_of_birth()
         
         return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
